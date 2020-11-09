@@ -105,7 +105,7 @@ def main():
             if current_step > total_iters:
                 break
             # update learning rate
-            model.update_learning_rate()
+            # model.update_learning_rate()
 
             # training
             model.feed_data(train_data)
@@ -165,6 +165,8 @@ def main():
                 if opt['use_tb_logger'] and 'debug' not in opt['name']:
                     tb_logger.add_scalar('psnr', avg_psnr, current_step)
 
+            model.update_learning_rate()
+            
             # save models and training states
             if current_step % opt['logger']['save_checkpoint_freq'] == 0:
                 logger.info('Saving models and training states.')

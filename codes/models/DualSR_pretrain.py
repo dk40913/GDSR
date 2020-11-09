@@ -66,9 +66,10 @@ class DualSR_pretrain(BaseModel):
     def optimize_parameters(self, step):
         self.optimizer_G.zero_grad()
         self.fake_Low, self.fake_high, self.fake_mask = self.netG(self.var_L)
-        l_pix = self.l_pix_w * self.cri_pix(self.fake_Low, self.real_H)
-        l_pix = l_pix + self.l_pix_w * self.cri_pix(self.fake_high, self.real_H)
-        l_pix = l_pix + self.l_pix_w * self.cri_pix(self.fake_mask, self.real_H)
+        # l_pix = self.l_pix_w * self.cri_pix(self.fake_Low, self.real_H)
+        # l_pix = l_pix + self.l_pix_w * self.cri_pix(self.fake_high, self.real_H)
+        # l_pix = l_pix + self.l_pix_w * self.cri_pix(self.fake_mask, self.real_H)
+        l_pix = self.l_pix_w * self.cri_pix(self.fake_Low, self.real_H) + self.l_pix_w * self.cri_pix(self.fake_high, self.real_H) + self.l_pix_w * self.cri_pix(self.fake_mask, self.real_H)
         l_pix.backward()
         self.optimizer_G.step()
 

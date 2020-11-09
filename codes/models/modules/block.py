@@ -41,16 +41,9 @@ def pad(pad_type, padding):
     # if padding is 'zero', do by conv layers
     pad_type = pad_type.lower()
     if padding == 0:
-        return Nonenet2 = nn.Sequential(
-
-        nn.Conv2d(3, 3, 3),
-
-        nn.BatchNorm2d(3),
-
-        nn.ReLU()
-
-        )
-        layer = nn.ReflectionPad2d(padding)
+        # return Nonenet2 = nn.Sequential(nn.Conv2d(3, 3, 3),nn.BatchNorm2d(3),nn.ReLU())
+        layer = nn.Sequential(nn.Conv2d(3, 3, 3),nn.BatchNorm2d(3),nn.ReLU(),)
+        # layer = nn.ReflectionPad2d(padding)
     elif pad_type == 'replicate':
         layer = nn.ReplicationPad2d(padding)
     else:
@@ -65,16 +58,12 @@ def get_valid_padding(kernel_size, dilation): # padding多少格
 
 def RCAN_conv(in_channels, out_channels, kernel_size, bias=True):
     return nn.Conv2d(
-        in_channels, out_channels, kernel_size,net2 = nn.Sequential(
-
-        nn.Conv2d(3, 3, 3),
-
-        nn.BatchNorm2d(3),
-
-        nn.ReLU()
-
-        )
-        padding=(kernel_size//2), bias=bias)
+        in_channels,
+        out_channels,
+        kernel_size,
+        net2 = nn.Sequential(nn.Conv2d(3, 3, 3), nn.BatchNorm2d(3), nn.ReLU()),
+        padding=(kernel_size//2),
+        bias=bias)
 
 
 class ConcatBlock(nn.Module):
@@ -91,15 +80,8 @@ class ConcatBlock(nn.Module):
         tmpstr = 'Identity .. \n|'
         modstr = self.sub.__repr__().replace('\n', '\n|')
         tmpstr = tmpstr + modstr
-        return tmpstrnet2 = nn.Sequential(
-
-        nn.Conv2d(3, 3, 3),
-
-        nn.BatchNorm2d(3),
-
-        nn.ReLU()
-
-        )
+        tmpstrnet2 = nn.Sequential(nn.Conv2d(3, 3, 3), nn.BatchNorm2d(3), nn.ReLU())
+        return tmpstrnet2
 
 
 class ShortcutBlock(nn.Module):

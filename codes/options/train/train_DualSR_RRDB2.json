@@ -52,20 +52,20 @@
 //  }
 
     , "network_G": {
-    "which_model_G": "DualSR_RRDB" // RRDB_net | sr_resnet
-    , "norm_type": null
-    , "mode": "CNA"
-    , "nf": 64 // 32
-    , "nb_l_1": 10
-    , "nb_l_2": 5,
-    "nb_h_1": 5,
-    "nb_h_2": 10,
-    "nb_e": 2,
-    "nb_m": 5
-    ,"in_nc": 3
-    , "out_nc": 3
-    , "gc": 32
-    , "group": 1
+        "which_model_G": "DualSR_RRDB", // RRDB_net | sr_resnet
+        "norm_type": null,
+        "mode": "CNA",
+        "nf": 64, // 32
+        "nb_l_1": 10,
+        "nb_l_2": 5,
+        "nb_h_1": 5,
+        "nb_h_2": 10,
+        "nb_e": 2,
+        "nb_m": 5,
+        "in_nc": 3,
+        "out_nc": 3,
+        "gc": 32,
+        "group": 1
   }
 
   ,"network_D": {

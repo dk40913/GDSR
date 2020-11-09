@@ -2,8 +2,8 @@ import math
 import torch
 import torch.nn as nn
 import torchvision
+import torch.nn.utils.spectral_norm as SN
 from . import block as B
-from . import spectral_norm as SN
 
 ####################
 # Generator
