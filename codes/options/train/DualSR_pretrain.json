@@ -14,12 +14,13 @@
 //      , "dataroot_HR": "/home/cwh/cwh/Dataset/2K_train_HR/2K_train_HR_new.lmdb"
 //      , "dataroot_LR": "/home/cwh/cwh/Dataset/2K_train_LR/2K_train_LR_new.lmdb"
 
-
+      , "dataroot_HR": "/media/e621/RAID5/e621/downloads/.tmp/DIV2K_train_HR_sub.lmdb"
+      , "dataroot_LR": "/media/e621/RAID5/e621/downloads/.tmp/DIV2K_train_LR_x4_sub.lmdb"
 
 //      , "dataroot_HR": "/home/lcc/CWH/Dataset2/Flickr2K/2K_train_HR_new/2K_train_HR_new.lmdb"
 //
-      , "dataroot_HR": "/home/lcc/CWH/DIV2K800/DIV2K800_sub.lmdb"
-      , "dataroot_LR": "/home/lcc/CWH/DIV2K800/DIV2K800_sub_bicLRx4.lmdb"
+//      , "dataroot_HR": "/home/lcc/CWH/DIV2K800/DIV2K800_sub.lmdb"
+//      , "dataroot_LR": "/home/lcc/CWH/DIV2K800/DIV2K800_sub_bicLRx4.lmdb"
 //      , "dataroot_LR": "/home/lcc/CWH/Dataset2/Flickr2K_LR_bicubic/2K_train_LR/2K_train_LR_new.lmdb"
       //train_hr_lmdbx4/DF2K_lr_x4.lmdb"
       , "subset_file": null
@@ -41,9 +42,15 @@
   }
 
   , "path": {
-    "root": "/home/lcc/CWH/LCC_BasicSR-master"
+    "root": "/media/e621/RAID5/e621/downloads/.tmp/LCC_BasicSR-master"
     //"root": "/home/cwh/cwh/LCC_BasicSR-master"
 
+    //"experiments_root": "/home/lcc/CWH/LCC_BasicSR-master/experiments/12_21_01_Dual_RRDB_128_GAN_x4_DIV2K"
+    //"models": "/home/lcc/CWH/LCC_BasicSR-master/experiments/12_21_01_Dual_RRDB_128_GAN_x4_DIV2K/models"
+    //"training_state": "/home/lcc/CWH/LCC_BasicSR-master/experiments/12_21_01_Dual_RRDB_128_GAN_x4_DIV2K/training_state"
+    //"log": "/home/lcc/CWH/LCC_BasicSR-master/experiments/12_21_01_Dual_RRDB_128_GAN_x4_DIV2K"
+    //"val_images": "/home/lcc/CWH/LCC_BasicSR-master/experiments/12_21_01_Dual_RRDB_128_GAN_x4_DIV2K/val_images"
+    
     //, "pretrain_model_G": "../pretrained_models/12_11_41000_G.pth"
     , "pretrain_model_G": "../experiments/pretrained_models/470000_G.pth"
   }

@@ -41,8 +41,15 @@ def pad(pad_type, padding):
     # if padding is 'zero', do by conv layers
     pad_type = pad_type.lower()
     if padding == 0:
-        return None
-    if pad_type == 'reflect':
+        return Nonenet2 = nn.Sequential(
+
+        nn.Conv2d(3, 3, 3),
+
+        nn.BatchNorm2d(3),
+
+        nn.ReLU()
+
+        )
         layer = nn.ReflectionPad2d(padding)
     elif pad_type == 'replicate':
         layer = nn.ReplicationPad2d(padding)
@@ -51,14 +58,22 @@ def pad(pad_type, padding):
     return layer
 
 
-def get_valid_padding(kernel_size, dilation):
+def get_valid_padding(kernel_size, dilation): # padding多少格
     kernel_size = kernel_size + (kernel_size - 1) * (dilation - 1)
     padding = (kernel_size - 1) // 2
     return padding
 
 def RCAN_conv(in_channels, out_channels, kernel_size, bias=True):
     return nn.Conv2d(
-        in_channels, out_channels, kernel_size,
+        in_channels, out_channels, kernel_size,net2 = nn.Sequential(
+
+        nn.Conv2d(3, 3, 3),
+
+        nn.BatchNorm2d(3),
+
+        nn.ReLU()
+
+        )
         padding=(kernel_size//2), bias=bias)
 
 
@@ -76,7 +91,15 @@ class ConcatBlock(nn.Module):
         tmpstr = 'Identity .. \n|'
         modstr = self.sub.__repr__().replace('\n', '\n|')
         tmpstr = tmpstr + modstr
-        return tmpstr
+        return tmpstrnet2 = nn.Sequential(
+
+        nn.Conv2d(3, 3, 3),
+
+        nn.BatchNorm2d(3),
+
+        nn.ReLU()
+
+        )
 
 
 class ShortcutBlock(nn.Module):
@@ -98,20 +121,20 @@ class ShortcutBlock(nn.Module):
 
 def sequential(*args):
     # Flatten Sequential. It unwraps nn.Sequential.
-    if len(args) == 1:
-        if isinstance(args[0], OrderedDict):
+    if len(args) == 1: #       排序
+        if isinstance(args[0], OrderedDict): # isinstance(object, classinfo) 判斷object是否為classinfo
             raise NotImplementedError('sequential does not support OrderedDict input.')
         return args[0]  # No sequential is needed.
     modules = []
     for module in args:
         if isinstance(module, nn.Sequential):
-            for submodule in module.children():
+            for submodule in module.children(): # module.children()=返回模型裡的組成元素
                 modules.append(submodule)
-        elif isinstance(module, nn.Module):
+        elif isinstance(module, nn.Module): # nn.Module是一個抽象類別，所有建構neural network本身有關的module，都是從nn.Module所繼承而來。
             modules.append(module)
     return nn.Sequential(*modules)
 
-
+#               number channels
 def conv_block(in_nc, out_nc, kernel_size, stride=1, dilation=1, groups=1, bias=True, \
                pad_type='zero', norm_type=None, act_type='relu', mode='CNA'):
     '''
@@ -119,7 +142,8 @@ def conv_block(in_nc, out_nc, kernel_size, stride=1, dilation=1, groups=1, bias=
     mode: CNA --> Conv -> Norm -> Act
         NAC --> Norm -> Act --> Conv (Identity Mappings in Deep Residual Networks, ECCV16)
     '''
-    assert mode in ['CNA', 'NAC', 'CNAC'], 'Wong conv mode [{:s}]'.format(mode)
+    # assert <test>, <message>，如果test判斷式沒過，就會跑message
+    assert mode in ['CNA', 'NAC', 'CNAC'], 'Wrong conv mode [{:s}]'.format(mode)
     padding = get_valid_padding(kernel_size, dilation)
     p = pad(pad_type, padding) if pad_type and pad_type != 'zero' else None
     padding = padding if pad_type == 'zero' else 0
@@ -189,7 +213,7 @@ class ResidualDenseBlock_5C(nn.Module):
     def __init__(self, nc, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
             norm_type=None, act_type='leakyrelu', mode='CNA'):
         super(ResidualDenseBlock_5C, self).__init__()
-        # gc: growth channel, i.e. intermediate channels
+        # gc: growth channel, i.e. intermediate中間 channels 
         self.conv1 = conv_block(nc, gc, kernel_size, stride, bias=bias, pad_type=pad_type, \
             norm_type=norm_type, act_type=act_type, mode=mode)
         self.conv2 = conv_block(nc+gc, gc, kernel_size, stride, bias=bias, pad_type=pad_type, \
@@ -207,8 +231,8 @@ class ResidualDenseBlock_5C(nn.Module):
 
     def forward(self, x):
         x1 = self.conv1(x)
-        x2 = self.conv2(torch.cat((x, x1), 1))
-        x3 = self.conv3(torch.cat((x, x1, x2), 1))
+        x2 = self.conv2(torch.cat((x, x1), 1)) #torch.cat將兩個張量(tensor)拼接在一起，cat是concatenate的意思
+        x3 = self.conv3(torch.cat((x, x1, x2), 1)) #1是列，0是行
         x4 = self.conv4(torch.cat((x, x1, x2, x3), 1))
         x5 = self.conv5(torch.cat((x, x1, x2, x3, x4), 1))
         return x5.mul(0.2) + x

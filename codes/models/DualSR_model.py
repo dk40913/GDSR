@@ -31,9 +31,9 @@ class DualSRModel(BaseModel):
             if train_opt['pixel_weight'] > 0:
                 l_pix_type = train_opt['pixel_criterion']
                 if l_pix_type == 'l1':
-                    self.cri_pix = nn.L1Loss().to(self.device)
+                    self.cri_pix = nn.L1Loss().to(self.device) #計算output和target之差的絕對值，可選返回同維度的tensor或者是一個標量。
                 elif l_pix_type == 'l2':
-                    self.cri_pix = nn.MSELoss().to(self.device)
+                    self.cri_pix = nn.MSELoss().to(self.device) #計算output和target之差的平方，可選返回同維度的tensor或者是一個標量。
                 else:
                     raise NotImplementedError('Loss type [{:s}] not recognized.'.format(l_pix_type))
                 self.l_pix_w = train_opt['pixel_weight']
@@ -120,7 +120,7 @@ class DualSRModel(BaseModel):
 
         self.optimizer_G.zero_grad()
 
-        self.fake_L, self.fake_H, self.mask = self.netG(self.var_L)
+        self.fake_L, self.fake_H, self.mask = self.netG(self.var_L) #把圖片丟進G
 
         l_g_total = 0
         if step % self.D_update_ratio == 0 and step > self.D_init_iters:

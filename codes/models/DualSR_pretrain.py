@@ -27,9 +27,9 @@ class DualSR_pretrain(BaseModel):
             # loss
             loss_type = train_opt['pixel_criterion']
             if loss_type == 'l1':
-                self.cri_pix = nn.L1Loss().to(self.device)
+                self.cri_pix = nn.L1Loss().to(self.device) #計算output和target之差的絕對值，可選返回同維度的tensor或者是一個標量。
             elif loss_type == 'l2':
-                self.cri_pix = nn.MSELoss().to(self.device)
+                self.cri_pix = nn.MSELoss().to(self.device) #計算output和target之差的平方，可選返回同維度的tensor或者是一個標量。
             else:
                 raise NotImplementedError('Loss type [{:s}] is not recognized.'.format(loss_type))
             self.l_pix_w = train_opt['pixel_weight']

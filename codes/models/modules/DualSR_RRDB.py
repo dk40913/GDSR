@@ -7,7 +7,9 @@ from . import spectral_norm as SN
 from . import architecture
 
 class DualSR_RRDB(nn.Module):
-    def __init__(self, in_nc, out_nc, nf, nb_e,nb_l_1,nb_l_2,nb_h_1,nb_h_2,nb_m,gc=32, upscale=4, norm_type=None, \
+    #                  3      3       64  2     10      5       5       10      5    
+    def __init__(self, in_nc, out_nc, nf, nb_e, nb_l_1, nb_l_2, nb_h_1, nb_h_2, nb_m, 
+            gc=32, upscale=4, norm_type=None, 
             act_type='leakyrelu', mode='CNA', upsample_mode='upconv'):
         super(DualSR_RRDB, self).__init__()
         n_upscale = int(math.log(upscale, 2))
@@ -16,23 +18,23 @@ class DualSR_RRDB(nn.Module):
 
         fea_conv = B.conv_block(in_nc, nf, kernel_size=3, norm_type=None, act_type=None)
         rb_blocks_e = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
-            norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_e)]
+            norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_e)] #nb_e=2
 
         rb_blocks_l1 = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
-                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_l_1)]
+                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_l_1)] #nb_l_1=10
         rb_blocks_l2 = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
-                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_l_2)]
+                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_l_2)] #nb_l_2=5
         rb_blocks_h1 = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
-                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_h_1)]
+                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_h_1)] #nb_h_1=5
 
         rb_blocks_concat = B.conv_block(nf*2, nf, kernel_size=3, norm_type=None, act_type=None)
 
 
         rb_blocks_h2= [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
-                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_h_2)]
+                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_h_2)] #nb_h_2=10
 
         rb_blocks_M = [B.RRDB(nf, kernel_size=3, gc=32, stride=1, bias=True, pad_type='zero', \
-                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_m)]
+                              norm_type=norm_type, act_type=act_type, mode='CNA') for _ in range(nb_m)] #nb_m=5
 
         # self.body_ex = B.sequential(fea_conv, B.ShortcutBlock(B.sequential(*rb_blocks_e)))
         self.body_ex_conv = B.sequential(fea_conv)
@@ -84,11 +86,11 @@ class DualSR_RRDB(nn.Module):
 
     def forward(self, x):
         # head
-        x = self.body_ex(x)
+        x = self.body_ex(x) # shared module做2次RRDB後
         # low
 
-        x_guide = self.body_l1(x)
-        x_l = self.body_l2(x_guide)
+        x_guide = self.body_l1(x) # 做10次RRDB後
+        x_l = self.body_l2(x_guide) # 做5次RRDB後
         x_l = self.LR_conv_l(x_l)
         x_l = self.upsampler_l(x_l)
         x_fea_l = self.HR_conv0_l(x_l)
@@ -96,17 +98,17 @@ class DualSR_RRDB(nn.Module):
 
         # high
 
-        x_h = self.body_h1(x)
+        x_h = self.body_h1(x) # 做5次RRDB後
 
         x_h = self.concat(torch.cat((x_guide, x_h), 1))
-        x_h = self.body_h2(x_h)
+        x_h = self.body_h2(x_h) # 做10次RRDB後
         x_h = self.LR_conv_h(x_h)
         x_h = self.upsampler_h(x_h)
         x_fea_h = self.HR_conv0_h(x_h)
         x_h = self.HR_conv1_h(x_fea_h)
 
         # mask
-        m = self.body_m(x)
+        m = self.body_m(x) # 做5次RRDB後
         m = self.LR_conv_M(m)
         m = self.upsampler_m(m)
         m = self.HR_conv0_m(m)

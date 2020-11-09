@@ -5,17 +5,16 @@ from multiprocessing import Pool
 import numpy as np
 import cv2
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.progress_bar import ProgressBar
-
+from utils.progress_bar import ProgressBar # 進度條
 
 def main():
     """A multi-thread tool to crop sub imags."""
-    input_folder = '/home/lcc/CWH/Dataset2/Flickr2K/DIV2K_train_HR/'
-    save_folder = '/home/lcc/CWH/Dataset2/Flickr2K/DIV2K_train_HR_sub/'
+    input_folder = '/home/e517herb/Desktop/DIV2K/DIV2K_train_LR_bicubic/X4'
+    save_folder = '/home/e517herb/Desktop/DIV2K_sub/DIV2K_train_LR_X4_sub/'
     n_thread = 20
-    crop_sz = 480
-    step = 240
-    thres_sz = 48
+    crop_sz = 120 #480
+    step = 60 #240
+    thres_sz = 12 #48
     compression_level = 3  # 3 is the default value in cv2
     # CV_IMWRITE_PNG_COMPRESSION from 0 to 9. A higher value means a smaller size and longer
     # compression time. If read raw images during training, use 0 for faster IO speed.
@@ -33,15 +32,15 @@ def main():
         img_list.extend(path)
 
     def update(arg):
-        pbar.update(arg)
+        pbar.update(arg) # 更新進度條
 
-    pbar = ProgressBar(len(img_list))
+    pbar = ProgressBar(len(img_list)) # 計算我有幾個工作
 
-    pool = Pool(n_thread)
+    pool = Pool(n_thread) # 執行序(多人一起執行分工)
     for path in img_list:
         pool.apply_async(worker,
-            args=(path, save_folder, crop_sz, step, thres_sz, compression_level),
-            callback=update)
+                         args=(path, save_folder, crop_sz, step, thres_sz, compression_level),
+                         callback=update)
     pool.close()
     pool.join()
     print('All subprocesses done.')
@@ -74,10 +73,9 @@ def worker(path, save_folder, crop_sz, step, thres_sz, compression_level):
                 crop_img = img[x:x + crop_sz, y:y + crop_sz]
             else:
                 crop_img = img[x:x + crop_sz, y:y + crop_sz, :]
-            crop_img = np.ascontiguousarray(crop_img)
-            # var = np.var(crop_img / 255)
-            # if var > 0.008:
-            #     print(img_name, index_str, var)
+            crop_img = np.ascontiguousarray(crop_img) #ascontiguousarray函數將一個內存不連續存儲的數組
+                                                      #轉換為內存連續存儲的數組，使得運行速度更快。
+            
             cv2.imwrite(
                 os.path.join(save_folder, img_name.replace('.png', '_s{:03d}.png'.format(index))),
                 crop_img, [cv2.IMWRITE_PNG_COMPRESSION, compression_level])

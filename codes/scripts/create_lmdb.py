@@ -10,8 +10,8 @@ from utils.progress_bar import ProgressBar
 
 # configurations
 #img_folder = '/home/lcc/CWH/Dataset2/Flickr2K_LR_bicubic/LRx4/*'  # glob matching pattern
-img_folder = '/home/lcc/CWH/Dataset2/Flickr2K/2K_train_HR_new/Flickr2K/*'
-lmdb_save_path = '/home/lcc/CWH/Dataset2/Flickr2K/2K_train_HR_new/2K_train_HR_new.lmdb'  # must end with .lmdb
+img_folder = '/home/e517herb/Desktop/DIV2K_sub/DIV2K_train_LR_X4_sub/*'
+lmdb_save_path = '/media/e621/RAID5/e621/downloads/.tmp/DIV2K800_train_LR_sub.lmdb'  # must end with .lmdb
 
 # img_folder = '/home/lcc/CWH/Dataset2/Flickr2K_LR_bicubic/2K_train_LRx4_new/*'
 # lmdb_save_path = '/home/lcc/CWH/Dataset2/Flickr2K_LR_bicubic/2K_train_LR_new.lmdb'  # must end with .lmdb
